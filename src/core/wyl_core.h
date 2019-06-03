@@ -22,49 +22,40 @@
 #define  WYL_DECLINED   -5
 #define  WYL_ABORT      -6
 
-#include<unistd.h>
+#define WYL_APP_START 	0
+#define WYL_APP_RELOAD 	1
+#define WYL_APP_STOP 	-1
+#define WYL_APP_DONE 	-2
+
 #include<signal.h>
-#include<stdio.h>
-#include<stdlib.h>
 #include<sys/param.h>
 #include<sys/types.h>
 #include<sys/stat.h>
-#include<time.h>
+#include <time.h>
 #include <stdio.h>
-#include <string.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <termios.h>
 #include <errno.h>
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <errno.h>
-#include <arpa/inet.h> 
-#include <stdio.h>
-#include <errno.h>
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <stdio.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h>
 #include <string.h>
-#include <stdlib.h>
-#include <fcntl.h>
 #include <sys/shm.h>
-#include <assert.h>
+#include <stdarg.h>
 
-
-
+#define ERROR_EXIT(m)\
+do\
+{\
+    perror(m);\
+    exit(EXIT_FAILURE);\
+}\
+while(0)
+	char* replace(char* src, char* sub, char* dst);
+	int __current_absolute_path(char * buf);
+	int applocal(char* buf);
+	int appinit(int argc, char* argv[]);
 #endif /* _WYL_CORE_H_INCLUDE_ */
 

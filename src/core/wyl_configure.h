@@ -33,7 +33,7 @@
         struct wyl_uart_s serial;
     } wyl_configure_s;
 
-
+	int apps(int argc, char* argv[]);
     int wyl_configure_init(char *profile, wyl_configure_s *cc);
 
 #endif /* _WYL_CONFIGURE_H_INCLUDE_ */

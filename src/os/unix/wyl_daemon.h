@@ -14,7 +14,9 @@
 #ifndef _WYL_DAEMON_H_INCLUDE_
 #define _WYL_DAEMON_H_INCLUDE_
 
-int wyl_daemon();
 
+	
+pid_t daemonize();
+int suicide(const char * daemon_name);
 #endif /* _WYL_DAEMON_H_INCLUDE_ */
 

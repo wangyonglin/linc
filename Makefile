@@ -147,8 +147,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(confdir)"
-DATA = $(conf_DATA)
+am__installdirs = "$(DESTDIR)$(confdir)" "$(DESTDIR)$(logdir)"
+DATA = $(conf_DATA) $(log_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -221,13 +221,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/yonglin/missing aclocal-1.13
+ACLOCAL = ${SHELL} /home/linc/missing aclocal-1.13
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/yonglin/missing autoconf
-AUTOHEADER = ${SHELL} /home/yonglin/missing autoheader
-AUTOMAKE = ${SHELL} /home/yonglin/missing automake-1.13
+AUTOCONF = ${SHELL} /home/linc/missing autoconf
+AUTOHEADER = ${SHELL} /home/linc/missing autoheader
+AUTOMAKE = ${SHELL} /home/linc/missing automake-1.13
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -260,7 +260,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/yonglin/missing makeinfo
+MAKEINFO = ${SHELL} /home/linc/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /usr/bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -283,10 +283,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = strip
 VERSION = 1.0
-abs_builddir = /home/yonglin
-abs_srcdir = /home/yonglin
-abs_top_builddir = /home/yonglin
-abs_top_srcdir = /home/yonglin
+abs_builddir = /home/linc
+abs_srcdir = /home/linc
+abs_top_builddir = /home/linc
+abs_top_srcdir = /home/linc
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -315,7 +315,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = $(prefix)/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/yonglin/install-sh
+install_sh = ${SHELL} /home/linc/install-sh
 libdir = $(prefix)/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -339,6 +339,8 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src
 confdir = ${prefix}/conf
 conf_DATA = conf/linc.conf
+logdir = ${prefix}/log
+log_DATA = log/linc.log
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -422,6 +424,27 @@ uninstall-confDATA:
 	@list='$(conf_DATA)'; test -n "$(confdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(confdir)'; $(am__uninstall_files_from_dir)
+install-logDATA: $(log_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(log_DATA)'; test -n "$(logdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(logdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(logdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(logdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(logdir)" || exit $$?; \
+	done
+
+uninstall-logDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(log_DATA)'; test -n "$(logdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(logdir)'; $(am__uninstall_files_from_dir)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -715,7 +738,7 @@ check: check-recursive
 all-am: Makefile $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(confdir)"; do \
+	for dir in "$(DESTDIR)$(confdir)" "$(DESTDIR)$(logdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -770,7 +793,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-confDATA
+install-data-am: install-confDATA install-logDATA
 
 install-dvi: install-dvi-recursive
 
@@ -816,7 +839,7 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-confDATA
+uninstall-am: uninstall-confDATA uninstall-logDATA
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
 
@@ -830,12 +853,13 @@ uninstall-am: uninstall-confDATA
 	info-am install install-am install-confDATA install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
 	install-exec-am install-html install-html-am install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-confDATA
+	install-info-am install-logDATA install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-am uninstall uninstall-am uninstall-confDATA \
+	uninstall-logDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

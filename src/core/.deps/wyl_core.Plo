@@ -1,4 +1,4 @@
-wyl_socket.lo: wyl_socket.c /usr/include/stdc-predef.h wyl_core.h \
+wyl_core.lo: wyl_core.c /usr/include/stdc-predef.h wyl_core.h \
  /usr/include/signal.h /usr/include/features.h /usr/include/sys/cdefs.h \
  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
  /usr/include/gnu/stubs-64.h /usr/include/bits/sigset.h \
@@ -48,7 +48,7 @@ wyl_socket.lo: wyl_socket.c /usr/include/stdc-predef.h wyl_core.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/sys/shm.h /usr/include/sys/ipc.h \
  /usr/include/bits/ipctypes.h /usr/include/bits/ipc.h \
- /usr/include/bits/shm.h wyl_socket.h wyl_log.h
+ /usr/include/bits/shm.h
 
 /usr/include/stdc-predef.h:
 
@@ -249,7 +249,3 @@ wyl_core.h:
 /usr/include/bits/ipc.h:
 
 /usr/include/bits/shm.h:
-
-wyl_socket.h:
-
-wyl_log.h:

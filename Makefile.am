@@ -8,3 +8,6 @@ includedir=$(prefix)/include
 
 confdir = ${prefix}/conf
 conf_DATA = conf/linc.conf
+
+logdir =${prefix}/log
+log_DATA = log/linc.log

@@ -1,5 +1,6 @@
 #include <wyl_core.h>
 #include <wyl_uart.h>
+#include <wyl_log.h>
 ssize_t safe_write(int fd, const void *vptr, size_t n) {
     size_t nleft;
     ssize_t nwritten;
@@ -47,12 +48,12 @@ ssize_t safe_read(int fd, void *vptr, size_t n) {
 int wyl_uart_open(int fd,const char* uart) {
     assert(uart);
     if ((fd = open(uart, O_RDWR | O_NOCTTY | O_NDELAY)) < 0) {
-        perror("Open UART failed!");
+		logger(log_error,"Open UART failed!");
         return -1;
     }
     /*清除串口非阻塞标志*/
     if (fcntl(fd, F_SETFL, 0) < 0) {
-        fprintf(stderr, "fcntl failed!\n");
+        logger(log_error, "fcntl failed!\n");
         return -1;
     }
     return fd;
@@ -63,7 +64,7 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
 
     /*获取终端属性*/
     if (tcgetattr(fd, &options) < 0) {
-        perror("Cannot get standard input description");
+        logger(log_error,"Cannot get standard input description");
         return -1;
     }
 

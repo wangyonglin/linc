@@ -120,7 +120,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libcore_la_LIBADD =
-am_libcore_la_OBJECTS = wyl_uart.lo wyl_socket.lo wyl_configure.lo
+am_libcore_la_OBJECTS = wyl_uart.lo wyl_socket.lo wyl_configure.lo \
+	wyl_log.lo wyl_core.lo
 libcore_la_OBJECTS = $(am_libcore_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -304,8 +305,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 lib_LTLIBRARIES = libcore.la
-libcore_la_SOURCES = wyl_uart.c wyl_socket.c wyl_configure.c
-include_HEADERS = wyl_uart.h wyl_config.h wyl_core.h wyl_socket.h wyl_configure.h
+libcore_la_SOURCES = wyl_uart.c wyl_socket.c wyl_configure.c wyl_log.c wyl_core.c
+include_HEADERS = wyl_uart.h wyl_config.h wyl_core.h wyl_socket.h wyl_configure.h wyl_log.h
 all: all-am
 
 .SUFFIXES:
@@ -386,6 +387,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wyl_configure.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wyl_core.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wyl_log.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wyl_socket.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wyl_uart.Plo@am__quote@
 

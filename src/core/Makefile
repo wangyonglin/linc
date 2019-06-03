@@ -120,7 +120,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libcore_la_LIBADD =
-am_libcore_la_OBJECTS = wyl_uart.lo wyl_socket.lo wyl_configure.lo
+am_libcore_la_OBJECTS = wyl_uart.lo wyl_socket.lo wyl_configure.lo \
+	wyl_log.lo wyl_core.lo
 libcore_la_OBJECTS = $(am_libcore_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -188,13 +189,13 @@ am__define_uniq_tagged_files = \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/yonglin/missing aclocal-1.13
+ACLOCAL = ${SHELL} /home/linc/missing aclocal-1.13
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/yonglin/missing autoconf
-AUTOHEADER = ${SHELL} /home/yonglin/missing autoheader
-AUTOMAKE = ${SHELL} /home/yonglin/missing automake-1.13
+AUTOCONF = ${SHELL} /home/linc/missing autoconf
+AUTOHEADER = ${SHELL} /home/linc/missing autoheader
+AUTOMAKE = ${SHELL} /home/linc/missing automake-1.13
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -227,7 +228,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/yonglin/missing makeinfo
+MAKEINFO = ${SHELL} /home/linc/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /usr/bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -250,10 +251,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = strip
 VERSION = 1.0
-abs_builddir = /home/yonglin/src/core
-abs_srcdir = /home/yonglin/src/core
-abs_top_builddir = /home/yonglin
-abs_top_srcdir = /home/yonglin
+abs_builddir = /home/linc/src/core
+abs_srcdir = /home/linc/src/core
+abs_top_builddir = /home/linc
+abs_top_srcdir = /home/linc
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -282,7 +283,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/yonglin/install-sh
+install_sh = ${SHELL} /home/linc/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -304,8 +305,8 @@ top_builddir = ../..
 top_srcdir = ../..
 AUTOMAKE_OPTIONS = foreign
 lib_LTLIBRARIES = libcore.la
-libcore_la_SOURCES = wyl_uart.c wyl_socket.c wyl_configure.c
-include_HEADERS = wyl_uart.h wyl_config.h wyl_core.h wyl_socket.h wyl_configure.h
+libcore_la_SOURCES = wyl_uart.c wyl_socket.c wyl_configure.c wyl_log.c wyl_core.c
+include_HEADERS = wyl_uart.h wyl_config.h wyl_core.h wyl_socket.h wyl_configure.h wyl_log.h
 all: all-am
 
 .SUFFIXES:
@@ -386,6 +387,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/wyl_configure.Plo
+include ./$(DEPDIR)/wyl_core.Plo
+include ./$(DEPDIR)/wyl_log.Plo
 include ./$(DEPDIR)/wyl_socket.Plo
 include ./$(DEPDIR)/wyl_uart.Plo
 

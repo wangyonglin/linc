@@ -1,5 +1,6 @@
 #include <wyl_core.h>
 #include <wyl_configure.h>
+#include <wyl_log.h>
 #define KEYVALLEN 100
 
 
@@ -46,7 +47,7 @@ int wyl_configure_init(char *profile, wyl_configure_s *cc) {
     char * buf = (char*) malloc(sizeof (char)*64);
     ret = configure_read(profile, "SOCKET", "port", buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading SOCKET -> port  failed!\n");
+        logger(log_error, "Reading SOCKET -> port  failed!\n");
         return -1;
     } else {
         cc->socket.port = atoi(buf);
@@ -54,21 +55,21 @@ int wyl_configure_init(char *profile, wyl_configure_s *cc) {
 
     ret = configure_read(profile, "SOCKET", "ip", buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading SOCKET -> ip  failed!\n");
+        logger(log_error, "Reading SOCKET -> ip  failed!\n");
         return -1;
     } else {
         strcpy(cc->socket.ip ,buf);
     }
     ret = configure_read(profile, "SOCKET", "count", buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading SOCKET -> count  failed!\n");
+        logger(log_error, "Reading SOCKET -> count  failed!\n");
         return -1;
     } else {
         cc->socket.count = atoi(buf);
     }
     ret = configure_read(profile, "Serial", "com",buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading Serial -> com  failed!\n");
+        logger(log_error, "Reading Serial -> com  failed!\n");
         return -1;
     }else {
          strcpy(cc->serial.com ,buf);
@@ -76,28 +77,28 @@ int wyl_configure_init(char *profile, wyl_configure_s *cc) {
     
    ret = configure_read(profile, "Serial", "speed",buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading Serial -> speed  failed!\n");
+        logger(log_error, "Reading Serial -> speed  failed!\n");
         return -1;
     }else {
          cc->serial.speed=atoi(buf);
     }
    ret = configure_read(profile, "Serial", "flow",buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading Serial -> flow  failed!\n");
+        logger(log_error, "Reading Serial -> flow  failed!\n");
         return -1;
     }else {
          cc->serial.flow=atoi(buf);
     }
    ret = configure_read(profile, "Serial", "bits",buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading Serial -> bits  failed!\n");
+        logger(log_error, "Reading Serial -> bits  failed!\n");
         return -1;
     }else {
          cc->serial.bits=atoi(buf);
     }
     ret = configure_read(profile, "Serial", "event",buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading Serial -> event  failed!\n");
+        logger(log_error, "Reading Serial -> event  failed!\n");
         return -1;
     }else {
         cc->serial.event=buf[0];
@@ -105,7 +106,7 @@ int wyl_configure_init(char *profile, wyl_configure_s *cc) {
     }
         ret = configure_read(profile, "Serial", "stop",buf);
     if (ret == -1) {
-        fprintf(stderr, "Reading Serial -> stop  failed!\n");
+        logger(log_error, "Reading Serial -> stop  failed!\n");
         return -1;
     }else {
          cc->serial.stop=atoi(buf);
@@ -122,7 +123,7 @@ int configure_read(char *profile, char *AppName, char *KeyName, char *KeyVal) {
     FILE *fp;
     int found = 0; /* 1 AppName 2 KeyName */
     if ((fp = fopen(profile, "r")) == NULL) {
-        printf("openfile [%s] error [%s]\n", profile, strerror(errno));
+        logger(log_error,"openfile [%s] error [%s]\n", profile, strerror(errno));
         return (-1);
     }
     fseek(fp, 0, SEEK_SET);
