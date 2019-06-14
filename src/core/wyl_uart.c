@@ -1,54 +1,12 @@
 #include <wyl_core.h>
 #include <wyl_uart.h>
 #include <wyl_log.h>
-ssize_t safe_write(int fd, const void *vptr, size_t n) {
-    size_t nleft;
-    ssize_t nwritten;
-    const char *ptr;
 
-    ptr = vptr;
-    nleft = n;
-
-    while (nleft > 0) {
-        if ((nwritten = write(fd, ptr, nleft)) <= 0) {
-            if (nwritten < 0 && errno == EINTR)
-                nwritten = 0;
-            else
-                return -1;
-        }
-        nleft -= nwritten;
-        ptr += nwritten;
-    }
-    return (n);
-}
-
-ssize_t safe_read(int fd, void *vptr, size_t n) {
-    size_t nleft;
-    ssize_t nread;
-    char *ptr;
-
-    ptr = vptr;
-    nleft = n;
-
-    while (nleft > 0) {
-        if ((nread = read(fd, ptr, nleft)) < 0) {
-            if (errno == EINTR)//被信号中断
-                nread = 0;
-            else
-                return -1;
-        } else
-            if (nread == 0)
-            break;
-        nleft -= nread;
-        ptr += nread;
-    }
-    return (n - nleft);
-}
-
-int wyl_uart_open(int fd,const char* uart) {
+uart_handle uart_create(uart_name uart, int speed, int bits, char event, int stop) {
     assert(uart);
+    int fd;
     if ((fd = open(uart, O_RDWR | O_NOCTTY | O_NDELAY)) < 0) {
-		logger(log_error,"Open UART failed!");
+        logger(log_error, "Open UART failed!");
         return -1;
     }
     /*清除串口非阻塞标志*/
@@ -56,15 +14,19 @@ int wyl_uart_open(int fd,const char* uart) {
         logger(log_error, "fcntl failed!\n");
         return -1;
     }
+    if (uart_configure(fd, speed, 0, bits, event, stop) < 0) {
+        logger(log_error, "uart_configure failed!\n");
+        return -1;
+    }
     return fd;
 };
 
-int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int stop){
+int uart_configure(int fd, int speed, int flow, int bits, char event, int stop) {
     struct termios options;
 
     /*获取终端属性*/
     if (tcgetattr(fd, &options) < 0) {
-        logger(log_error,"Cannot get standard input description");
+        logger(log_error, "Cannot get standard input description");
         return -1;
     }
 
@@ -92,7 +54,7 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
             cfsetospeed(&options, B115200);
             break;
         default:
-            fprintf(stderr, "Unkown baude!\n");
+            logger(log_error, "Unkown baude!\n");
             return -1;
     }
 
@@ -112,7 +74,7 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
             options.c_cflag |= IXON | IXOFF | IXANY;
             break;
         default:
-            fprintf(stderr, "Unkown c_flow!\n");
+            logger(log_error, "Unkown c_flow!\n");
             return -1;
     }
 
@@ -135,7 +97,7 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
             options.c_cflag |= CS8;
             break;
         default:
-            fprintf(stderr, "Unkown bits!\n");
+            logger(log_error, "Unkown bits!\n");
             return -1;
     }
 
@@ -170,7 +132,7 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
             options.c_cflag |= ISTRIP; //ISTRIP：若设置则有效输入数字被剥离7个字节，否则保留全部8位
             break;
         default:
-            fprintf(stderr, "Unkown parity!\n");
+            logger(log_error, "Unkown parity!\n");
             return -1;
     }
 
@@ -183,7 +145,7 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
             options.c_cflag |= CSTOPB; //CSTOPB：使用两位停止位
             break;
         default:
-            fprintf(stderr, "Unkown stop!\n");
+            logger(log_error, "Unkown stop!\n");
             return -1;
     }
 
@@ -215,52 +177,46 @@ int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int st
     return 0;
 }
 
-int wyl_uart_read(int fd, void *r_buf, size_t len) {
-    ssize_t cnt = 0;
-    fd_set rfds;
-    struct timeval time;
+void * uart_routine(uart_handle uartfd, struct threadpool* pool, threadpool_work_t * work) {
+    //epoll初始化
+    //epoll描述符
+    struct epoll_event events[MAX_EVENTS];
+    int epollfd = epoll_create(MAX_EVENTS);
+    struct epoll_event event;
+    event.events = EPOLLIN | EPOLLET;
+    event.data.fd = uartfd;
 
-    /*将文件描述符加入读描述符集合*/
-    FD_ZERO(&rfds);
-    FD_SET(fd, &rfds);
+    //epoll_ctl设置属性,注册事件
+    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, uartfd, &event) < 0) {
+        logger(log_error, "epoll 加入失败 fd:%d\n", uartfd);
+        exit(EXIT_FAILURE);
+    }
+    int i;
+    for (;;) {
+        int ret = epoll_wait(epollfd, events, 1, 50);
+        if (ret < 0) {
+            logger(log_error, "epoll error");
+            break;
+        } else if (ret == 0) {
+            //超时
+            continue;
+        }
 
-    /*设置超时为15s*/
-    time.tv_sec = 20;
-    time.tv_usec = 0;
-
-    /*实现串口的多路I/O*/
-    int ret = select(fd + 1, &rfds, NULL, NULL, &time);
-    switch (ret) {
-        case -1:
-            fprintf(stderr, "select error!\n");
-            return -1;
-        case 0:
-            fprintf(stderr, "time over!\n");
-            return -1;
-        default:
-            cnt = safe_read(fd, r_buf, len);
-            if (cnt == -1) {
-                fprintf(stderr, "read error!\n");
-                return -1;
+        //直接获取了事件数量，给出了活动的流，这里就是跟selec，poll区别的关键 //select要用遍历整个数组才知道是那个文件描述符有事件。而epoll直接就把有事件的文件描述符按顺序保存在eventList中
+        for (i = 0; i < ret; i++) {
+            //错误输出
+            if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP) || !(events[i].events & EPOLLIN)) {
+                logger(log_error, "epoll error : EPOLLERR|EPOLLHUP|EPOLLIN \n");
+                close(events[i].data.fd);
+                // exit(EXIT_FAILURE);
             }
-            return cnt;
-    }
-}
 
-int wyl_uart_write(int fd, const char* w_buf, size_t len) {
-    ssize_t cnt = 0;
-    cnt = safe_write(fd, w_buf, len);
-    if (cnt == -1) {
-        fprintf(stderr, "write error!\n");
-        return -1;
+            if (events[i].events & EPOLLIN) {
+                work->fd.uartfd=events[i].data.fd;
+    
+                threadpool_add(pool, work->funcation, &work->fd);
+            }
+        }
     }
-    return cnt;
-}
-
-int wyl_uart_destory(int sockfd) {
-    assert(sockfd);
-    close(sockfd);
     return 0;
-};
-
-
+}

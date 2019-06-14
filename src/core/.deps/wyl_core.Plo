@@ -48,7 +48,9 @@ wyl_core.lo: wyl_core.c /usr/include/stdc-predef.h wyl_core.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/sys/shm.h /usr/include/sys/ipc.h \
  /usr/include/bits/ipctypes.h /usr/include/bits/ipc.h \
- /usr/include/bits/shm.h
+ /usr/include/bits/shm.h /usr/include/netinet/tcp.h \
+ /usr/include/sys/epoll.h /usr/include/bits/epoll.h /usr/include/netdb.h \
+ /usr/include/rpc/netdb.h /usr/include/bits/netdb.h
 
 /usr/include/stdc-predef.h:
 
@@ -249,3 +251,15 @@ wyl_core.h:
 /usr/include/bits/ipc.h:
 
 /usr/include/bits/shm.h:
+
+/usr/include/netinet/tcp.h:
+
+/usr/include/sys/epoll.h:
+
+/usr/include/bits/epoll.h:
+
+/usr/include/netdb.h:
+
+/usr/include/rpc/netdb.h:
+
+/usr/include/bits/netdb.h:

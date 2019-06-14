@@ -48,8 +48,11 @@ main.o: main.c /usr/include/stdc-predef.h core/wyl_core.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
  /usr/include/sys/shm.h /usr/include/sys/ipc.h \
  /usr/include/bits/ipctypes.h /usr/include/bits/ipc.h \
- /usr/include/bits/shm.h core/wyl_config.h core/wyl_socket.h \
- core/wyl_configure.h core/wyl_uart.h os/unix/wyl_daemon.h core/wyl_log.h
+ /usr/include/bits/shm.h /usr/include/netinet/tcp.h \
+ /usr/include/sys/epoll.h /usr/include/bits/epoll.h /usr/include/netdb.h \
+ /usr/include/rpc/netdb.h /usr/include/bits/netdb.h core/wyl_config.h \
+ core/wyl_socket.h core/threadpool.h core/wyl_configure.h core/wyl_uart.h \
+ os/unix/wyl_daemon.h core/wyl_log.h
 
 /usr/include/stdc-predef.h:
 
@@ -251,9 +254,23 @@ core/wyl_core.h:
 
 /usr/include/bits/shm.h:
 
+/usr/include/netinet/tcp.h:
+
+/usr/include/sys/epoll.h:
+
+/usr/include/bits/epoll.h:
+
+/usr/include/netdb.h:
+
+/usr/include/rpc/netdb.h:
+
+/usr/include/bits/netdb.h:
+
 core/wyl_config.h:
 
 core/wyl_socket.h:
+
+core/threadpool.h:
 
 core/wyl_configure.h:
 

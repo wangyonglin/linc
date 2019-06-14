@@ -13,21 +13,23 @@
 
 #ifndef _WYL_SOCKET_H_INCLUDED_
 #define _WYL_SOCKET_H_INCLUDED_
-#include <arpa/inet.h> 
+#include <threadpool.h>
+#define CON_QUEUE 20
+#define MAX_DATA_SIZE 4096
+#define MAX_EVENTS 500
+    typedef int socket_handle;
+    typedef int socket_host;
+    typedef int socket_backlog;
+    typedef int epoll_event_handle;
+    typedef int epoll_timeout;
+    typedef int uart_handle;
+    typedef int epoll_handle;
+    typedef int socket_int;
+    typedef unsigned int epoll_events_handle;
 
-
-
-    typedef struct {
-        int sockfd;
-        void *arg;
-        struct in_addr addr;
-    } wyl_socket_block;
-    
-    int w_f(int sockfd, int uartfd, char *wbuf);
-    int r_f(int sockfd, int uartfd, char *rbuf);
-    void * funcation(void * arg);
-    int wyl_socket_open(const char *ip, int host, int backlog);
-    int wyl_socket_router(int fockfd, wyl_socket_block *handle);
-    int wyl_socket_destory(int sockfd);
+    int setnonblocking(socket_handle sockfd);
+    void * pthread_handle_message(void * arg);
+    socket_handle socket_create(socket_host host, socket_backlog backlog);
+void * socket_routine(socket_handle sockfd,struct threadpool* pool,threadpool_work_t* work);
 #endif /* _WYL_SOCKET_H_INCLUDED_ */
 

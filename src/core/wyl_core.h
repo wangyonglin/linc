@@ -45,6 +45,32 @@
 #include <string.h>
 #include <sys/shm.h>
 #include <stdarg.h>
+#include<netinet/tcp.h>
+#include <sys/epoll.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+typedef struct 
+{
+    int sockfd;
+    int uartfd;
+}fd_t;
+typedef struct {
+    struct threadpool *pool;
+    int handle;
+    void * arg;
+} threadpool_application_t;
+    typedef struct {
+        void * (*funcation)(void *argv);
+        fd_t fd;
+    }threadpool_work_t;
+    
+typedef struct{
+        int handle;
+        void *resove;
+        int reject;
+    }result_collection_t;
+
 
 #define ERROR_EXIT(m)\
 do\

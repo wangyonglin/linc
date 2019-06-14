@@ -17,11 +17,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-int wyl_uart_open(int fd,const char* uart);
-int wyl_uart_configure(int fd, int speed, int flow, int bits, char event, int stop);
-int wyl_uart_destory(int fd) ;
+    #define MAX_EVENTS 500
 
-
+    typedef int uart_handle;
+    typedef const char* uart_name;
+    typedef int epoll_handle;
+uart_handle uart_create(uart_name uart, int speed, int bits, char event, int stop);
+int uart_configure(int fd, int speed, int flow, int bits, char event, int stop);
+void * uart_routine(uart_handle uartfd, struct threadpool* pool,threadpool_work_t * work);
+epoll_handle uart_epoll(uart_handle handle);
 
 #ifdef __cplusplus
 }

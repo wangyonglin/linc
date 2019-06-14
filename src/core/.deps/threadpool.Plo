@@ -1,11 +1,11 @@
-wyl_daemon.lo: wyl_daemon.c /usr/include/stdc-predef.h \
- ../../core/wyl_core.h /usr/include/signal.h /usr/include/features.h \
- /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
- /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
- /usr/include/bits/sigset.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h /usr/include/bits/signum.h \
- /usr/include/time.h /usr/include/bits/siginfo.h \
- /usr/include/bits/sigaction.h /usr/include/bits/sigcontext.h \
+threadpool.lo: threadpool.c /usr/include/stdc-predef.h wyl_core.h \
+ /usr/include/signal.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-64.h /usr/include/bits/sigset.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/bits/signum.h /usr/include/time.h \
+ /usr/include/bits/siginfo.h /usr/include/bits/sigaction.h \
+ /usr/include/bits/sigcontext.h \
  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h \
  /usr/include/bits/sigstack.h /usr/include/sys/ucontext.h \
  /usr/include/bits/pthreadtypes.h /usr/include/bits/sigthread.h \
@@ -50,12 +50,12 @@ wyl_daemon.lo: wyl_daemon.c /usr/include/stdc-predef.h \
  /usr/include/bits/ipctypes.h /usr/include/bits/ipc.h \
  /usr/include/bits/shm.h /usr/include/netinet/tcp.h \
  /usr/include/sys/epoll.h /usr/include/bits/epoll.h /usr/include/netdb.h \
- /usr/include/rpc/netdb.h /usr/include/bits/netdb.h wyl_daemon.h \
- ../../core/wyl_log.h
+ /usr/include/rpc/netdb.h /usr/include/bits/netdb.h threadpool.h \
+ wyl_log.h
 
 /usr/include/stdc-predef.h:
 
-../../core/wyl_core.h:
+wyl_core.h:
 
 /usr/include/signal.h:
 
@@ -265,6 +265,6 @@ wyl_daemon.lo: wyl_daemon.c /usr/include/stdc-predef.h \
 
 /usr/include/bits/netdb.h:
 
-wyl_daemon.h:
+threadpool.h:
 
-../../core/wyl_log.h:
+wyl_log.h:
